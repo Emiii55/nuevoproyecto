@@ -52,9 +52,13 @@ export class TableComponent {
       await this.servicioCrud.crearProducto(nuevoProducto)
         .then(producto => {
           alert("He agregado un nuevo producto con éxito.");
+
+          //resetea el formulario y las casillas quedan vacías
+          this.producto.reset();
         })
         .catch(error =>{
-          alert("Ha ocurrido un error al cargar un producto.")
+          alert("Ha ocurrido un error al cargar un producto.");
+          this.producto.reset();
         })
     }
   }
@@ -74,4 +78,51 @@ export class TableComponent {
     })
   }
 
+  //EDITAR PRODUCTOS
+  //se envia y llama al momento que tocamos 
+  mostrarEditar(productoSeleccionado: Producto){
+
+    /*
+    toma los valores del producto seleccionado y los va a autocompletar
+    en el formulario del modal (menos el ID)
+    */
+
+    this.producto.setValue({
+      nombre: productoSeleccionado.nombre,
+      precio: productoSeleccionado.precio,
+      descripcion: productoSeleccionado.descripcion,
+      categoria: productoSeleccionado.categoria,
+      imagen: productoSeleccionado.imagen,
+      alt: productoSeleccionado.alt
+    })
+  }
+
+  // Vincula a boton "editarProducto" del modal de "Editar"
+  // ! -> recibe valores vacios o discretos
+  editarProducto(){
+    let datos: Producto = {
+      //solo idProducto no se modifica por el usuario
+      idProducto: this.productoSeleccionado.idProducto,
+      /*
+      Los demás atributos reciben nueva información/valor desde el formulario
+      */
+      nombre: this.producto.value.nombre!,
+      precio: this.producto.value.precio!,
+      descripcion: this.producto.value.descripcion!,
+      categoria: this.producto.value.categoria!,
+      imagen: this.producto.value.imagen!,
+      alt: this.producto.value.alt!
+    }
+
+    // Enviamos al metodo el id del producto seleccionado y los datos actualizados
+    this.servicioCrud.modificarProducto(this.productoSeleccionado.idProducto, datos)
+    .then(producto => {
+      alert("El producto se ha modificado con éxito");
+      this.producto.reset();
+    })
+    .catch(error => {
+      alert("Hubo un problema al modificar el producto: \n"+error);
+      this.producto.reset();
+    })
+  }
 }
