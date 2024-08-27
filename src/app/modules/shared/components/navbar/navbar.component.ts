@@ -34,4 +34,24 @@ export class NavbarComponent {
     // redirigimos a la raíz del sitio web
     this.servicioRutas.navigate(['/']);
   }
+
+  //funcion cambiar fondo
+
+  cambiarFondo(){
+    let toggle: HTMLInputElement | null = document.getElementById('toggle') as HTMLInputElement
+    let label_toggle: HTMLInputElement | null = document.getElementById('label_toggle') as HTMLInputElement
+
+    if (toggle) {
+      let checked: boolean = toggle.checked;
+      document.body.classList.toggle('dark',checked)
+
+      if (checked) {
+        label_toggle!.innerHTML = '<i class="fa-solid fa-hat-wizard"></i>'
+      }
+      else {
+        label_toggle!.innerHTML = '<i class="fa-solid fa-skull-crossbones">'
+      }
+    }
+  }
+
 }
